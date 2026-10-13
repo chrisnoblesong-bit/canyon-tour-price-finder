@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Canyon Finder | 캐년 투어 가격 비교</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--ink:#172033;--muted:#667085;--line:#e3e7ee;--accent:#e87935;--green:#087f5b;--navy:#111827}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Malgun Gothic",sans-serif}
+header{background:linear-gradient(120deg,#111827,#29394e);color:#fff;padding:30px 18px 34px}.wrap{max-width:1080px;margin:auto}.brand{color:#ffb36b;font-weight:800;letter-spacing:2px;font-size:13px}h1{font-size:clamp(27px,5vw,42px);margin:13px 0 8px}header p{color:#d6dce5;line-height:1.6;margin:0}
+main{max-width:1080px;margin:auto;padding:20px 14px 48px}.panel,.tour,.notice,.stat{background:var(--card);border:1px solid var(--line);border-radius:16px}.panel,.notice{padding:18px;margin-bottom:14px}
+.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}input,select{width:100%;min-width:0;padding:11px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;font-size:14px;color:var(--ink)}
+.actions,.tour-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}button,.linkbtn{display:inline-block;border:0;border-radius:9px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;text-decoration:none;font-size:14px}button.secondary,.linkbtn.secondary{background:#edf0f5;color:#263244}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.stat{padding:15px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:22px;margin-top:7px}
+.listhead{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin:24px 0 12px}.listhead h2{margin:0 0 5px}.muted{color:var(--muted);font-size:13px;line-height:1.65}.tour{padding:17px;margin-bottom:12px}.tourtop{display:flex;align-items:flex-start;gap:12px}.rank{width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;border-radius:11px;background:#fff0e3;color:#a94e12;font-weight:800}.tourtitle{font-size:18px;font-weight:800;margin:2px 0 6px}.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.badge{border-radius:30px;padding:5px 8px;font-size:11px;background:#eef2f7;color:#475569}.badge.good{background:#e0f5eb;color:#08734e}.badge.warn{background:#fff0d9;color:#8b5100}
+.pricegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border-top:1px solid var(--line);padding-top:14px;margin-top:15px}.pricegrid small{display:block;color:var(--muted);font-size:12px}.pricegrid strong{display:block;font-size:18px;margin-top:5px}.price{color:var(--green)}.foot{font-size:12px;color:var(--muted);line-height:1.8;margin-top:22px}.empty{text-align:center;padding:30px;color:var(--muted)}
+@media(max-width:700px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.pricegrid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat strong{font-size:18px}}
+@media(max-width:420px){.filters{grid-template-columns:1fr}.pricegrid{grid-template-columns:1fr 1fr}.tour{padding:13px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">CANYON FINDER</div><h1>캐년 투어 가격 비교</h1><p>LA 출발 · 2박 3일 · 가격과 후기를 한눈에</p><p style="font-size:12px;margin-top:10px">표시 가격과 예약 가능 여부는 여행사 원본 페이지에서 최종 확인하세요.</p></div></header>
+<main>
+<section class="panel">
+<h2 style="margin:0 0 6px">검색 조건</h2><div class="muted">추가 비용을 입력하면 1인 예상 비용과 선택 인원 총액에 반영됩니다.</div>
+<div class="filters">
+<div><label for="date">출발 날짜</label><input id="date" type="date"></div>
+<div><label for="people">여행 인원</label><select id="people"><option value="1">1명</option><option value="2">2명</option><option value="3">3명</option><option value="4" selected>4명</option><option value="5">5명</option><option value="6">6명</option></select></div>
+<div><label for="fee">추가 비용 (USD/1인)</label><input id="fee" type="number" min="0" value="0" step="10"></div>
+<div><label for="rate">환율 (KRW/USD)</label><input id="rate" type="number" min="1" value="1400" step="10"></div>
+</div><div class="actions"><button id="apply">조건 적용</button><button class="secondary" id="reset">초기화</button></div>
+</section>
+<section class="stats"><div class="stat"><small>등록 후보</small><strong id="count">-</strong></div><div class="stat"><small>가격 확인됨</small><strong id="priced">-</strong></div><div class="stat"><small>최저 참고가</small><strong id="lowest">-</strong></div></section>
+<section class="notice"><strong>데이터 상태</strong><p class="muted" style="margin-bottom:5px">이 버전은 투어 후보와 원본 링크를 비교합니다. 여행사 공개 API가 확인되지 않은 상품은 실시간 가격을 임의로 표시하지 않습니다. 날짜별 예약 가능 여부와 최종 비용은 원본 페이지에서 확인하세요.</p><div id="status" class="muted">상품 목록을 불러오는 중...</div></section>
+<div class="listhead"><div><h2>투어 후보</h2><div class="muted">가격 미확인 상품은 가격순 정렬 시 아래에 표시됩니다.</div></div><div style="min-width:190px"><label for="sort">정렬</label><select id="sort"><option value="recommended">추천순 (가격 + 후기)</option><option value="price">가격 낮은순</option><option value="rating">평점 높은순</option><option value="reviews">후기 많은순</option><option value="discount">할인율 높은순</option></select></div></div>
+<div id="results"></div>
+<div class="foot">주의: 코스·기간·숙박·입장료·팁·식사 포함 여부는 상품마다 다릅니다. 같은 조건의 상품끼리 비교하세요. 환율은 참고값이며 실시간 환율이 아닙니다. 평점과 후기 수는 플랫폼별 집계 방식이 다를 수 있습니다.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);let tours=[];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function safeUrl(s){try{let u=new URL(s);return ["https:","http:"].includes(u.protocol)?u.href:"#"}catch{return "#"}}
+function usd(t){if(t.price==null)return null;return t.currency==="KRW"?Number(t.price)/Math.max(1,Number($("rate").value)||1400):Number(t.price)}
+function total(t){let p=usd(t);return p==null?null:p+Math.max(0,Number($("fee").value)||0)+Math.max(0,Number(t.extraFeeUSD)||0)}
+function off(t){let p=usd(t);if(p==null||t.originalPrice==null)return null;let o=t.currency==="KRW"?Number(t.originalPrice)/(Number($("rate").value)||1400):Number(t.originalPrice);return o>p?Math.round((o-p)/o*100):null}
+function score(t){let cost=total(t);if(cost==null)return -1;let prices=tours.map(total).filter(x=>x!=null);let min=Math.min(...prices),max=Math.max(...prices);let ps=max===min?100:100*(max-cost)/(max-min);let n=Number(t.reviews)||0,r=Number(t.rating)||0;let adjusted=r?(r*n/(n+30)+4.2*30/(n+30)):0;return ps*.6+(adjusted/5*100)*.4}
+function money(v,c="USD"){if(v==null||!Number.isFinite(Number(v)))return "가격 확인 필요";return new Intl.NumberFormat("ko-KR",{style:"currency",currency:c,maximumFractionDigits:0}).format(v)}
+function render(){
+ let list=[...tours],sort=$("sort").value;
+ list.sort((a,b)=>{if(sort==="price"){let x=total(a),y=total(b);return x==null?(y==null?0:1):y==null?-1:x-y}if(sort==="rating")return (b.rating||0)-(a.rating||0);if(sort==="reviews")return (b.reviews||0)-(a.reviews||0);if(sort==="discount")return (off(b)||0)-(off(a)||0);return score(b)-score(a)});
+ $("count").textContent=list.length;let known=list.filter(t=>t.price!=null).map(total);$("priced").textContent=list.filter(t=>t.price!=null).length;$("lowest").textContent=known.length?money(Math.min(...known)):"미확인";
+ $("results").innerHTML="";
+ if(!list.length){$("results").innerHTML='<div class="tour empty">표시할 상품이 없습니다.</div>';return}
+ list.forEach((t,i)=>{let p=usd(t),tot=total(t),discount=off(t),n=Math.max(1,Number($("people").value)||1),rating=t.rating?Number(t.rating).toFixed(1)+" / 5":"평점 확인 필요",reviews=t.reviews?Number(t.reviews).toLocaleString("ko-KR")+"개 후기":"후기 수 확인 필요";
+ let el=document.createElement("article");el.className="tour";
+ el.innerHTML=`<div class="tourtop"><div class="rank">${i+1}</div><div style="flex:1;min-width:0"><div class="tourtitle">${esc(t.name)}</div><div class="muted">${esc(t.provider||"여행사")} · ${esc(t.duration||"일정 확인 필요")}</div><div class="badges"><span class="badge warn">${t.priceStatus==="live"?"API 가격 갱신":"실시간 가격 미연동"}</span><span class="badge">${esc(rating)}</span><span class="badge">${esc(reviews)}</span>${discount==null?"":`<span class="badge good">표시 할인 ${discount}%</span>`}</div></div></div>
+ <div class="pricegrid"><div><small>표시 가격 / 1인</small><strong>${p==null?"확인 필요":money(p)}</strong></div><div><small>추가 비용 포함 / 1인</small><strong class="price">${tot==null?"확인 필요":money(tot)}</strong></div><div><small>선택 인원 총액</small><strong>${tot==null?"확인 필요":money(tot*n)}</strong></div></div>
+ <p class="muted" style="margin-top:12px">${esc(t.conditions||"날짜, 포함 항목 및 필수 추가 비용 확인 필요")}</p><p class="muted">마지막 데이터 확인: ${esc(t.updatedAt||"확인 시각 미제공")}</p>
+ <div class="tour-actions"><a class="linkbtn" href="${esc(safeUrl(t.url))}" target="_blank" rel="noopener noreferrer">원본 사이트에서 확인</a><a class="linkbtn secondary" href="${esc(safeUrl(t.reviewUrl||t.url))}" target="_blank" rel="noopener noreferrer">후기 및 조건 보기</a></div>`;
+ $("results").appendChild(el);
+ });
+}
+async function load(){ $("status").textContent="상품 목록 불러오는 중...";try{let r=await fetch("/api/tours",{cache:"no-store"});if(!r.ok)throw Error("API error");let d=await r.json();tours=Array.isArray(d.tours)?d.tours:[];$("status").textContent=`목록 응답 시각: ${d.updatedAt||"정보 없음"} · 실제 예약 가격은 각 사이트에서 확인하세요.`;render()}catch(e){$("status").textContent="API 연결 실패. Vercel에 api/tours.js 파일이 배포되었는지 확인하세요.";}}
+$("apply").addEventListener("click",render);$("sort").addEventListener("change",render);$("fee").addEventListener("input",render);$("rate").addEventListener("input",render);$("people").addEventListener("change",render);
+$("reset").addEventListener("click",()=>{$("date").value="";$("people").value="4";$("fee").value="0";$("rate").value="1400";$("sort").value="recommended";render()});
+load();
+</script>
+</body></html>
